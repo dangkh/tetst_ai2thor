@@ -242,8 +242,12 @@ while randomAgent.memory.isFull() == False:
     s = env.get_observation()    
     s = np.array([s])
     
-    ...
-    ...
+    '''
+    number of target = n
+    target_number = random(1,n)
+    target_name = concat("target",num2str(taret_number))
+    target = mpimg.imread(target_name);
+    '''
     target = mpimg.imread('target.png')
     target = np.array([target])
     while True:            
