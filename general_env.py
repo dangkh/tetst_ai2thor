@@ -26,6 +26,8 @@ class environment():
       self.controller.reset(self.name_scene)
       self.event = self.controller.step(dict(action='Initialize', gridSize=0.05))
       self.angle = 0
+      self.target = 0
+      self.target_list = [43,47]
     else:
       self.controller = gym.make(self.name_scene)
       self.controller.reset()
@@ -37,6 +39,9 @@ class environment():
     #only for gym
     if self.env == 1:
       self.controller.render()
+
+  def set_target(target_number= 0):
+    self.target = target_number
 
   def step(self, action_number= 0):
     done = False
@@ -66,7 +71,7 @@ class environment():
         reward = -0.2
 
       done = False
-      if self.event.metadata['objects'][43]['visible']:
+      if self.event.metadata['objects'][self.target_list[self.target]]['visible']:
         reward = 1000
         done = True
 
