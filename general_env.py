@@ -1,6 +1,6 @@
 import gym
 import ai2thor.controller
-
+import matplotlib.pyplot as plt
 
 def set_name_scene(name_scene, type_env):
   tmp = ['FloorPlan28', 'CartPole-v0']
@@ -9,15 +9,12 @@ def set_name_scene(name_scene, type_env):
   else:
     return name_scene
 
-def check(info):
-  return not info.metadata['lastActionSuccess']
-
-
 
 class environment():
   def __init__(self, default= 0, name_scene= None):
     # set type of environment
     # default: 0 = ai2thor; 1 = gym
+    print "Initialize environment"
     self.env = default
     self.name_scene = set_name_scene(name_scene, self.env)
     if default == 0:
@@ -27,7 +24,8 @@ class environment():
       self.controller = ai2thor.controller.Controller()
       self.controller.start()
       self.controller.reset(self.name_scene)
-      self.event = self.controller.step(dict(action='Initialize', gridSize=0.5))
+      self.event = self.controller.step(dict(action='Initialize', gridSize=0.05))
+      self.angle = 0
     else:
       self.controller = gym.make(self.name_scene)
       self.controller.reset()
@@ -40,22 +38,42 @@ class environment():
     if self.env == 1:
       self.controller.render()
 
-  def step(self, action_number= None):
+  def step(self, action_number= 0):
     done = False
     reward = -99999
     state = None
-    print action_number
     if self.env == 0:
-      info = self.controller.step(dict(action= action_number))
-      state = info.frame
-
-      done = check(info)
-      if done:
-        reward = -1000
-      elif action_number <=4 :
-        reward = 1
+      print self.action[action_number]
+      # info = self.controller.step(dict(action= self.action[action_number]))
+      if action_number < 4:
+        info = self.controller.step(dict(action= self.action[action_number]))
+      elif action_number == 4:
+        self.angle += 30
+        info = self.controller.step(dict(action= 'Rotate', rotation=self.angle))
       else:
-        reward = 0
+        self.angle -= 30
+        info = self.controller.step(dict(action= 'Rotate', rotation=self.angle))
+
+      state = info.frame
+      self.event = info
+
+      done = not self.event.metadata["lastActionSuccess"]
+      reward = 0
+      if done:
+        reward += -1
+      if action_number <4 :
+        reward = -0.5
+      else:
+        reward = -0.2
+
+      done = False
+      if self.event.metadata['objects'][43]['visible']:
+        self.env_reset()
+        print self.event.metadata['objects'][43]
+        plt.imshow(info.frame)
+        plt.show()
+        reward = 100000
+        done = True
 
       return state, reward, done
     else:
@@ -75,7 +93,7 @@ class environment():
   def env_reset(self):
     if self.env == 0:
       self.controller.reset(self.name_scene)
-      self.event = self.controller.step(dict(action='Initialize', gridSize=0.5))
+      self.event = self.controller.step(dict(action='Initialize', gridSize=0.05))
     else:
       self.controller.reset()
 

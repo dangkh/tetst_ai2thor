@@ -279,7 +279,7 @@ for e in range(EPISODES):
 
     for time in range(1000):           
         # self.env.render()
-
+        print "step ", time
         action = agent.act(state, target)
 
         next_state, reward, done = env.step(action)
