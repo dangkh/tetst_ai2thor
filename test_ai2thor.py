@@ -4,6 +4,7 @@ import random
 import matplotlib.pyplot as plt
 controller = ai2thor.controller.Controller()
 controller.start()
+bfscontroller = ai2thor.controller.BFSController(controller)
 
 # Kitchens: FloorPlan1 - FloorPlan30
 # Living rooms: FloorPlan201 - FloorPlan230
@@ -12,7 +13,8 @@ controller.start()
 
 controller.reset('FloorPlan28')
 controller.step(dict(action='Initialize', gridSize=0.25))
-
+bfscontroller.visualize_points('FloorPlan28')
+bfscontroller.build_graph()
 
 # event = controller.step(dict(action='RotateLeft'))
 # event = controller.step(dict(action='RotateLeft'))

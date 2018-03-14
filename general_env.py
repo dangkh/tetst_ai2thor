@@ -43,7 +43,7 @@ class environment():
     reward = -99999
     state = None
     if self.env == 0:
-      print self.action[action_number]
+      
       # info = self.controller.step(dict(action= self.action[action_number]))
       if action_number < 4:
         info = self.controller.step(dict(action= self.action[action_number]))
@@ -58,13 +58,14 @@ class environment():
       self.event = info
 
       done = not self.event.metadata["lastActionSuccess"]
+      print self.action[action_number], done
       reward = 0
       if done:
-        reward += -1
+        reward = -1
       if action_number <4 :
-        reward = -0.5
+        reward += -0.5
       else:
-        reward = -0.2
+        reward += -0.2
 
       done = False
       if self.event.metadata['objects'][43]['visible']:
