@@ -130,62 +130,20 @@ class DQN:
 if __name__ == "__main__" : 
 
   my_env = general_env.environment()
-  #TODO inital parameter
-  epochs = 100000
-  steps = 5000
-  minibatch_size = 32
-  learningRate = 1e-3#1e6
-  discountFactor = 0.95
-  network_outputs = my_env.action_range
-  memorySize = 100000
-  learnStart = 1000 # timesteps to observe before training
-  EXPLORE = memorySize # frames over which to anneal epsilon
-  INITIAL_EPSILON = 1 # starting value of epsilon
-  FINAL_EPSILON = 0.01 # final value of epsilon
-  explorationRate = INITIAL_EPSILON
-  stepCounter = 0
-
-  deepQ = DQN(network_outputs, memorySize, discountFactor, learningRate, learnStart)
-  deepQ.initNetworks()
-  #TODO training
-
-  for epoch in range(epochs):
-    my_env.env_reset()
-    observation = my_env.get_observation()
-    cumulated_reward = 0
-
-
-    for t in xrange(steps):
-      observation = np.expand_dims(observation.reshape(3,300,300), axis = 0)
-      qValues = deepQ.getQValues(observation)
-
-      action = deepQ.selectAction(qValues, explorationRate)
-      newObservation, reward, done = my_env.step(action)
-      newObservation = np.expand_dims(newObservation.reshape(3,300,300), axis = 0)
-      cumulated_reward += reward
-      deepQ.addMemory(observation, action, reward, newObservation, done)
-      deepQ.updateTargetNetwork()
-      observation = newObservation
-
-      #We reduced the epsilon gradually
-      if explorationRate > FINAL_EPSILON and stepCounter > learnStart:
-          explorationRate -= (INITIAL_EPSILON - FINAL_EPSILON) / EXPLORE
-
-      if stepCounter == learnStart:
-          print("Starting learning")
-
-      if stepCounter >= learnStart:
-          deepQ.learnOnMiniBatch(minibatch_size, False)
-
-      if (t == steps-1):
-          print ("reached the end")
-          done = True
-
-      if done:
-        print ("Epoch"+ str(epoch) + "step: " + str(t) + "reward: " + str(cumulated_reward))
-        break
-
-      stepCounter += 1
-
+  
+  tmp = my_env.step(5)
+  tmp = my_env.step(4)
+  tmp = my_env.step(5)
+  tmp = my_env.step(5)
+  tmp = my_env.step(5)
+  tmp = my_env.step(5)
+  tmp = my_env.step(5)
+  tmp = my_env.step(5)
+  tmp = my_env.step(2)
+  tmp = my_env.step(2)
+  tmp = my_env.step(2)
+  tmp = my_env.step(2)
+  tmp = my_env.step(2)
+  
 
 
